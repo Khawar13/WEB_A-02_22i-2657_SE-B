@@ -91,33 +91,33 @@ function updateThemeBasedOnWeather(condition) {
 
     const themes = {
         Clear: {
-            headerBackground: 'url("clearsky.jpeg")',
-            widgetBackground: 'url("clearsky.jpeg")',
+            headerBackground: 'url("small-clouds-with-sun.jpg")',
+            widgetBackground: 'url("small-clouds-with-sun.jpg")',
             textColor: '#000'
         },
         Clouds: {
-            headerBackground: 'url("clouds.jpeg")',
-            widgetBackground: 'url("clouds.jpeg")',
+            headerBackground: 'url("storm-clouds.jpg")',
+            widgetBackground: 'url("storm-clouds.jpg")',
             textColor: '#fff'
         },
         Rain: {
-            headerBackground: 'url("rain.jpeg")',
-            widgetBackground: 'url("rain.jpeg")',
+            headerBackground: 'url("raain.jpeg")',
+            widgetBackground: 'url("raain.jpeg")',
             textColor: '#fff'
         },
         Mist: {
-            headerBackground: 'url("fog.jpeg")',
-            widgetBackground: 'url("fog.jpeg")',
+            headerBackground: 'url("trees-surrounded-by-fogs-forest.jpg")',
+            widgetBackground: 'url("trees-surrounded-by-fogs-forest.jpg")',
             textColor: '#fff'
         },
         Fog: {
-            headerBackground: 'url("fog.jpeg")',
-            widgetBackground: 'url("fog.jpeg")',
+            headerBackground: 'url("trees-surrounded-by-fogs-forest.jpg")',
+            widgetBackground: 'url("trees-surrounded-by-fogs-forest.jpg")',
             textColor: '#fff'
         },
         Smoke: {
-            headerBackground: 'url("fog.jpeg")',
-            widgetBackground: 'url("fog.jpeg")',
+            headerBackground: 'url("trees-surrounded-by-fogs-forest.jpg")',
+            widgetBackground: 'url("trees-surrounded-by-fogs-forest.jpg")',
             textColor: '#fff'
         }
     };

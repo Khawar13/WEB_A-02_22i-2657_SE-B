@@ -208,12 +208,12 @@ function resetTable() {
 function updateHeaderBackground(condition) {
     const header = document.querySelector('.header');
     const themes = {
-        Clear: 'url("clearsky.jpeg")',
-        Clouds: 'url("clouds.jpeg")',
-        Rain: 'url("rain.jpeg")',
-        Mist: 'url("fog.jpeg")',
-        Fog: 'url("fog.jpeg")',
-        Smoke: 'url("fog.jpeg")'
+        Clear: 'url("small-clouds-with-sun.jpg")',
+        Clouds: 'url("storm-clouds.jpg")',
+        Rain: 'url("raain.jpeg")',
+        Mist: 'url("trees-surrounded-by-fogs-forest.jpg")',
+        Fog: 'url("trees-surrounded-by-fogs-forest.jpg")',
+        Smoke: 'url("trees-surrounded-by-fogs-forest.jpg")'
     };
 
     const backgroundImage = themes[condition] || themes['Clear'];

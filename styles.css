@@ -1,4 +1,3 @@
-/* Global Styles */
 * {
     margin: 0;
     padding: 0;
@@ -20,7 +19,6 @@ body {
     backdrop-filter: blur(10px);
 }
 
-/* Sidebar Styles */
 .sidebar {
     width: 250px;
     background-color: rgba(44, 62, 80, 0.9);
@@ -67,7 +65,6 @@ body {
     transform: translateX(5px);
 }
 
-/* Main Content Styles */
 .main-content {
     flex: 1;
     display: flex;
@@ -76,7 +73,7 @@ body {
 }
 
 .header {
-    background-color: rgba(52, 152, 219, 0.9);
+    background-color: rgba(44, 62, 80, 0.9);
     color: #fff;
     padding: 20px;
     display: flex;
@@ -99,7 +96,7 @@ body {
 .search-container button,
 .table-controls button {
     padding: 10px 15px;
-    background-color: #2ecc71;
+    background-color: rgba(44, 62, 80, 0.9);
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -112,7 +109,7 @@ body {
 
 .search-container button:hover,
 .table-controls button:hover {
-    background-color: #27ae60;
+    background-color: rgba(26, 37, 49, 0.9);
     transform: scale(1.05);
 }
 
@@ -131,7 +128,6 @@ body {
     border-radius: 50%;
 }
 
-/* Dashboard Content Styles */
 .dashboard-content {
     padding: 20px;
     display: flex;
@@ -211,14 +207,12 @@ body {
     transform: translateY(-5px);
 }
 
-/* Content Wrapper Styles */
 .content-wrapper {
     display: flex;
     padding: 20px;
     gap: 20px;
 }
 
-/* Table Styles */
 .forecast-table-container {
     flex: 1;
     background-color: rgba(255, 255, 255, 0.9);
@@ -251,7 +245,6 @@ th {
     font-weight: bold;
 }
 
-/* Pagination Styles */
 .pagination {
     display: flex;
     justify-content: center;
@@ -260,9 +253,6 @@ th {
     gap: 10px;
 }
 
-/* ... (previous styles remain unchanged) ... */
-
-/* Chatbot Styles */
 .chatbot-widget {
     width: 300px;
     background-color: rgba(255, 255, 255, 0.9);
@@ -314,7 +304,7 @@ th {
 
 #sendChatBtn {
     padding: 10px 15px;
-    background-color: #3498db;
+    background-color: rgba(44, 62, 80, 0.9);
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -323,7 +313,7 @@ th {
 }
 
 #sendChatBtn:hover {
-    background-color: #2980b9;
+    background-color: rgba(30, 42, 54, 0.9);
 }
 
 .loading-spinner {
@@ -335,7 +325,7 @@ th {
     width: 50px;
     height: 50px;
     border: 5px solid rgba(255, 255, 255, 0.3);
-    border-top: 5px solid #3498db;
+    border-top: 5px solid rgba(44, 62, 80, 0.9);
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
@@ -350,7 +340,6 @@ th {
     }
 }
 
-/* Responsive Design */
 @media (max-width: 1024px) {
     .content-wrapper {
         flex-direction: column;
@@ -394,7 +383,6 @@ th {
     }
 }
 
-/* Animations */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -414,13 +402,11 @@ th {
     animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Theme Transitions */
 .header,
 .weather-widget {
     transition: background-image 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 
-/* Button hover effect */
 button {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -430,7 +416,6 @@ button:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Table row hover effect */
 tr:hover {
     background-color: rgba(52, 152, 219, 0.1);
     transition: background-color 0.3s ease;
