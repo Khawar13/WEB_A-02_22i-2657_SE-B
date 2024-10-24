@@ -326,8 +326,6 @@ th {
     background-color: #2980b9;
 }
 
-/* ... (remaining styles unchanged) ... */
-/* Loading Spinner */
 .loading-spinner {
     display: none;
     position: fixed;
