@@ -7,49 +7,81 @@
     <title>Weather Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="dashboard.js" defer></script>
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="logo">Weather App</div>
-        <div class="menu">
-            <a href="index.html" id="dashboard">Dashboard</a>
-            <a href="tables.html" id="tables">Tables</a>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/weather-logo-white-Ld9Iy7Ov5Ue5Ue5Ue5Ue5Ue5Ue5Ue5Ue5Ue5Ue5.png"
+                    alt="Weather App Logo" class="logo-img">
+                Weather App
+            </div>
+            <nav class="menu">
+                <a href="index.html" id="dashboard" class="active">Dashboard</a>
+                <a href="tables.html" id="tables">Tables</a>
+            </nav>
+        </div>
+        <div class="main-content">
+            <header class="header">
+                <div class="search-container">
+                    <input type="text" id="cityInput" placeholder="Enter city name">
+                    <button onclick="getWeather()" class="search-button">
+                        <i data-lucide="search"></i>
+                        Get Weather
+                    </button>
+                </div>
+                <div class="user-profile">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/user-avatar-Ld9Iy7Ov5Ue5Ue5Ue5Ue5Ue5Ue5Ue5Ue5Ue5Ue5.png"
+                        alt="User Avatar" class="user-avatar">
+                    User Profile
+                </div>
+            </header>
+            <div class="dashboard-content">
+                <div class="weather-widget" id="weatherWidget">
+                    <h2 id="weatherTitle">Current Weather</h2>
+                    <div class="weather-info">
+                        <img id="weatherIcon" src="" alt="Weather Icon" class="weather-icon">
+                        <div class="weather-details">
+                            <p id="weatherDescription" class="weather-description"></p>
+                            <div class="weather-data">
+                                <div class="weather-data-item">
+                                    <i data-lucide="thermometer"></i>
+                                    <span id="tempValue"></span>
+                                    <span id="tempUnit" class="temp-unit">°C</span>
+                                </div>
+                                <div class="weather-data-item">
+                                    <i data-lucide="droplets"></i>
+                                    <span id="humidity"></span>
+                                </div>
+                                <div class="weather-data-item">
+                                    <i data-lucide="wind"></i>
+                                    <span id="windSpeed"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="charts">
+                    <div class="chart-container">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="main-content">
-        <div class="header">
-            <div class="search-container">
-                <input type="text" id="cityInput" placeholder="Enter city name">
-                <button onclick="getWeather()">Get Weather</button>
-            </div>
-            <div class="user-profile">User Profile</div>
-        </div>
-
-        <div class="weather-widget" id="weatherWidget">
-            <h2 id="weatherTitle">Weather Data</h2>
-            <p id="weatherDescription"></p>
-            <img id="weatherIcon" src="" alt="Weather Icon">
-            <p id="temperature"></p>
-            <p id="humidity"></p>
-            <p id="windSpeed"></p>
-        </div>
-
-        <div class="charts">
-            <div class="chart-container">
-                <canvas id="barChart"></canvas>
-            </div>
-            <div class="chart-container">
-                <canvas id="doughnutChart"></canvas>
-            </div>
-            <div class="chart-container">
-                <canvas id="lineChart"></canvas>
-            </div>
-        </div>
-    </div>
-
+    <div class="loading-spinner"></div>
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 
 </html>

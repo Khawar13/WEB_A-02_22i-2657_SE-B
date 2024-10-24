@@ -7,104 +7,71 @@
     <title>Weather Forecast</title>
     <link rel="stylesheet" href="styles.css">
     <script src="tables.js" defer></script>
-    <script type="importmap">
-        {
-          "imports": {
-            "google-generative-ai": "https://esm.run/@google/generative-ai"
-          }
-        }
-    </script>
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="logo">Weather App</div>
-        <div class="menu">
-            <a href="index.html" id="dashboard">Dashboard</a>
-            <a href="tables.html" id="tables">Tables</a>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="logo3.jpeg" alt="Weather App Logo" class="logo-img">
+                Weather App
+            </div>
+            <nav class="menu">
+                <a href="index.html" id="dashboard">Dashboard</a>
+                <a href="tables.html" id="tables" class="active">Tables</a>
+            </nav>
         </div>
-    </div>
-
-    <div class="main-content">
-        <div class="header">
-            <h2>5-Day Weather Forecast</h2>
-            <div class="user-profile">User Profile</div>
-        </div>
-
-        <div class="content-wrapper">
-            <div class="forecast-table-container">
-                <table id="forecastTable">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Temperature (°C)</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody id="forecastTableBody"></tbody>
-                </table>
-                <div class="pagination">
-                    <button id="prevPage">Previous</button>
-                    <span id="pageInfo"></span>
-                    <button id="nextPage">Next</button>
+        <div class="main-content">
+            <header class="header">
+                <h2>5-Day Weather Forecast</h2>
+                <div class="user-profile">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/user-avatar-Ld9Iy7Ov5Ue5Ue5Ue5Ue5Ue5Ue5Ue5Ue5Ue5Ue5.png"
+                        alt="User Avatar" class="user-avatar">
+                    User Profile
                 </div>
-                <div class="table-controls">
-                    <button id="sortAscending">Sort Temperatures Ascending</button>
-                    <button id="sortDescending">Sort Temperatures Descending</button>
-                    <button id="filterRain">Show Rainy Days</button>
-                    <button id="showHighestTemp">Show Highest Temperature Day</button>
-                    <button id="resetTable">Reset Table</button>
+            </header>
+            <div class="content-wrapper">
+                <div class="forecast-table-container">
+                    <div class="table-controls">
+                        <button id="toggleTemp" class="toggle-temp">
+                            <span class="temp-icon">🌡️</span>
+                            <span id="tempUnitDisplay">°C</span>
+                        </button>
+                        <button id="sortAscending">Sort Temperatures Ascending</button>
+                        <button id="sortDescending">Sort Temperatures Descending</button>
+                        <button id="filterRain">Show Rainy Days</button>
+                        <button id="showHighestTemp">Show Highest Temperature Day</button>
+                        <button id="resetTable">Reset Table</button>
+                    </div>
+                    <table id="forecastTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Temperature (<span id="tempUnit">°C</span>)</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="forecastTableBody"></tbody>
+                    </table>
+                    <div class="pagination">
+                        <button id="prevPage">Previous</button>
+                        <span id="pageInfo"></span>
+                        <button id="nextPage">Next</button>
+                    </div>
+                </div>
+                <div class="chatbot-widget">
+                    <div class="chat-header">Weather Assistant</div>
+                    <div class="chat-area" id="chatArea"></div>
+                    <div class="chat-input-container">
+                        <input type="text" id="chatInput" placeholder="Ask about the weather..." />
+                        <button id="sendChatBtn">Send</button>
+                    </div>
                 </div>
             </div>
-
-            <div class="chatbot-widget">
-                <div class="chat-header">Chatbot</div>
-                <div class="chat-area" id="chatArea">
-                    <div class="chat-response" id="chatResponse"></div>
-                </div>
-                <input type="text" id="chatInput" placeholder="Ask me anything..." />
-                <button id="sendChatBtn">Send</button>
-            </div>
         </div>
     </div>
-
-    <script type="module">
-        import { GoogleGenerativeAI } from "google-generative-ai";
-
-        const Gemini_API_KEY = "AIzaSyBSkFzVV4DdqkdRw9Aklto9LNMcB12JZHA";
-        const genAI = new GoogleGenerativeAI(Gemini_API_KEY);
-
-        document.getElementById('sendChatBtn').onclick = handleChat;
-
-        async function handleChat() {
-            const question = document.getElementById('chatInput').value;
-            if (!question) {
-                alert("Please enter a question.");
-                return;
-            }
-
-            // Clear the chat input
-            document.getElementById('chatInput').value = '';
-
-            // Generate the bot response using Google Generative AI
-            const response = await fetchChatbotResponse(question);
-            document.getElementById('chatResponse').innerText = response;
-        }
-
-        async function fetchChatbotResponse(question) {
-            const model = await genAI.getGenerativeModel({
-                model: "gemini-1.5-flash",
-            });
-
-            const result = await model.generateContent({
-                prompt: question,
-                maxTokens: 100, // Limit the response length
-            });
-
-            return result.response.text(); // Ensure the response is returned as text
-        }
-    </script>
+    <div class="loading-spinner"></div>
 </body>
 
 </html>

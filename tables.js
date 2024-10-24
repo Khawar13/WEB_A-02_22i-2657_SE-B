@@ -3,8 +3,119 @@ let currentPage = 1;
 const entriesPerPage = 10;
 let forecastData = [];
 let originalForecastData = [];
+let isCelsius = true;
 
-// Function to load forecast data from localStorage
+const GEMINI_API_KEY = 'AIzaSyBSkFzVV4DdqkdRw9Aklto9LNMcB12JZHA';
+const GEMINI_API_URL = 'https://api.gemini.com/v1/chat';
+
+async function sendChatMessage(message) {
+    try {
+        const response = await fetch(GEMINI_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${GEMINI_API_KEY}`
+            },
+            body: JSON.stringify({ message })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to send message to Gemini API');
+        }
+
+        const data = await response.json();
+        return data.reply;
+    } catch (error) {
+        console.error('Error:', error);
+        return 'Sorry, I am unable to respond right now.';
+    }
+}
+
+async function handleChatInput() {
+    const chatInput = document.getElementById('chatInput');
+    const userMessage = chatInput.value.trim();
+    if (!userMessage) return;
+
+    addChatMessage('You', userMessage);
+    chatInput.value = '';
+
+    const botReply = processWeatherQuery(userMessage) || await sendChatMessage(userMessage);
+    addChatMessage('Weather Assistant', botReply);
+}
+
+function processWeatherQuery(query) {
+    query = query.toLowerCase();
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    if (query.includes('weather today')) {
+        const todayData = forecastData.find(item => {
+            const date = new Date(item.dt * 1000);
+            return date.getDate() === today.getDate() && date.getMonth() === today.getMonth();
+        });
+        if (todayData) {
+            const tempDisplay = isCelsius ? todayData.main.temp.toFixed(1) : ((todayData.main.temp * 9 / 5) + 32).toFixed(1);
+            return `The weather today is ${todayData.weather[0].description} (${tempDisplay}°${isCelsius ? 'C' : 'F'})`;
+        }
+    } else if (query.includes('weather tomorrow')) {
+        const tomorrowData = forecastData.find(item => {
+            const date = new Date(item.dt * 1000);
+            return date.getDate() === tomorrow.getDate() && date.getMonth() === tomorrow.getMonth();
+        });
+        if (tomorrowData) {
+            const tempDisplay = isCelsius ? tomorrowData.main.temp.toFixed(1) : ((tomorrowData.main.temp * 9 / 5) + 32).toFixed(1);
+            return `The weather tomorrow is ${tomorrowData.weather[0].description} (${tempDisplay}°${isCelsius ? 'C' : 'F'})`;
+        }
+    } else if (query.includes('average temperature')) {
+        const totalTemp = forecastData.reduce((sum, item) => {
+            const temp = isCelsius ? item.main.temp : (item.main.temp * 9 / 5) + 32;
+            return sum + temp;
+        }, 0);
+        const avgTemp = totalTemp / forecastData.length;
+        return `The average temperature for the week is ${avgTemp.toFixed(1)}°${isCelsius ? 'C' : 'F'}`;
+    } else if (query.includes('highest temperature')) {
+        const highestTempDay = originalForecastData.reduce((max, item) => {
+            const temp = isCelsius ? item.main.temp : (item.main.temp * 9 / 5) + 32;
+            return temp > max.temp ? { item, temp } : max;
+        }, { item: null, temp: -Infinity }).item;
+        if (highestTempDay) {
+            const date = new Date(highestTempDay.dt * 1000).toLocaleDateString();
+            const tempDisplay = isCelsius ? highestTempDay.main.temp.toFixed(1) : ((highestTempDay.main.temp * 9 / 5) + 32).toFixed(1);
+            return `The highest temperature will be ${tempDisplay}°${isCelsius ? 'C' : 'F'} on ${date}.`;
+        }
+    } else if (query.includes('lowest temperature')) {
+        const lowestTempDay = originalForecastData.reduce((min, item) => {
+            const temp = isCelsius ? item.main.temp : (item.main.temp * 9 / 5) + 32;
+            return temp < min.temp ? { item, temp } : min;
+        }, { item: null, temp: Infinity }).item;
+        if (lowestTempDay) {
+            const date = new Date(lowestTempDay.dt * 1000).toLocaleDateString();
+            const tempDisplay = isCelsius ? lowestTempDay.main.temp.toFixed(1) : ((lowestTempDay.main.temp * 9 / 5) + 32).toFixed(1);
+            return `The lowest temperature will be ${tempDisplay}°${isCelsius ? 'C' : 'F'} on ${date}.`;
+        }
+    } else if (query.includes('rainy days')) {
+        const rainyDays = originalForecastData.filter(item => item.weather[0].main.toLowerCase().includes('rain'));
+        if (rainyDays.length > 0) {
+            const rainyDates = rainyDays.map(item => new Date(item.dt * 1000).toLocaleDateString()).join(', ');
+            return `The following days have rain: ${rainyDates}`;
+        } else {
+            return 'There are no rainy days in the forecast.';
+        }
+    }
+
+    return null;
+}
+
+function addChatMessage(sender, message) {
+    const chatArea = document.getElementById('chatArea');
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('chat-message');
+    messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+    chatArea.appendChild(messageElement);
+    chatArea.scrollTop = chatArea.scrollHeight;
+}
+
 function loadForecastData() {
     const storedData = localStorage.getItem('forecastData');
     const lastSearchedCity = localStorage.getItem('lastSearchedCity');
@@ -15,24 +126,13 @@ function loadForecastData() {
         originalForecastData = [...forecastData];
         updateForecastTable();
         updatePagination();
-
-        // Update the header with the city name
-        const headerTitle = document.querySelector('.header h2');
-        if (headerTitle) {
-            headerTitle.textContent = `5-Day Weather Forecast for ${lastSearchedCity}`;
-        }
-
-        // Update the header background based on the current weather
+        document.querySelector('.header h2').textContent = `5-Day Weather Forecast for ${lastSearchedCity}`;
         updateHeaderBackground(currentWeather);
     } else {
-        const headerTitle = document.querySelector('.header h2');
-        if (headerTitle) {
-            headerTitle.textContent = 'No forecast data available';
-        }
+        document.querySelector('.header h2').textContent = 'No forecast data available';
     }
 }
 
-// Function to update the forecast table
 function updateForecastTable() {
     const tableBody = document.getElementById('forecastTableBody');
     tableBody.innerHTML = '';
@@ -44,39 +144,39 @@ function updateForecastTable() {
     pageData.forEach(item => {
         const row = document.createElement('tr');
         const date = new Date(item.dt * 1000);
+        const tempCelsius = item.main.temp;
+        const tempFahrenheit = (tempCelsius * 9 / 5) + 32;
+        const tempDisplay = isCelsius ? tempCelsius.toFixed(1) : tempFahrenheit.toFixed(1);
+
         row.innerHTML = `
             <td>${date.toLocaleDateString()}</td>
             <td>${date.toLocaleTimeString()}</td>
-            <td>${item.main.temp.toFixed(1)}</td>
+            <td>${tempDisplay}</td>
             <td>${item.weather[0].description}</td>
         `;
         tableBody.appendChild(row);
     });
 }
 
-// Function to update pagination
 function updatePagination() {
     const totalPages = Math.ceil(forecastData.length / entriesPerPage);
     const pageInfo = document.getElementById('pageInfo');
-    const prevButton = document.getElementById('prevPage');
-    const nextButton = document.getElementById('nextPage');
-
     pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-    prevButton.disabled = currentPage === 1;
-    nextButton.disabled = currentPage === totalPages;
+    document.getElementById('prevPage').disabled = currentPage === 1;
+    document.getElementById('nextPage').disabled = currentPage === totalPages;
 }
 
-// Function to sort temperatures
 function sortTemperatures(ascending = true) {
     forecastData.sort((a, b) => {
-        return ascending ? a.main.temp - b.main.temp : b.main.temp - a.main.temp;
+        const tempA = isCelsius ? a.main.temp : (a.main.temp * 9 / 5) + 32;
+        const tempB = isCelsius ? b.main.temp : (b.main.temp * 9 / 5) + 32;
+        return ascending ? tempA - tempB : tempB - tempA;
     });
     currentPage = 1;
     updateForecastTable();
     updatePagination();
 }
 
-// Function to filter rainy days
 function filterRainyDays() {
     forecastData = originalForecastData.filter(item =>
         item.weather[0].main.toLowerCase().includes('rain')
@@ -86,18 +186,18 @@ function filterRainyDays() {
     updatePagination();
 }
 
-// Function to show the day with highest temperature
 function showHighestTemperatureDay() {
-    const highestTempDay = originalForecastData.reduce((max, item) =>
-        max.main.temp > item.main.temp ? max : item
-    );
+    const highestTempDay = originalForecastData.reduce((max, item) => {
+        const tempMax = isCelsius ? max.main.temp : (max.main.temp * 9 / 5) + 32;
+        const tempItem = isCelsius ? item.main.temp : (item.main.temp * 9 / 5) + 32;
+        return tempMax > tempItem ? max : item;
+    });
     forecastData = [highestTempDay];
     currentPage = 1;
     updateForecastTable();
     updatePagination();
 }
 
-// Function to reset the table
 function resetTable() {
     forecastData = [...originalForecastData];
     currentPage = 1;
@@ -105,7 +205,6 @@ function resetTable() {
     updatePagination();
 }
 
-// Function to update the header background based on weather condition
 function updateHeaderBackground(condition) {
     const header = document.querySelector('.header');
     const themes = {
@@ -124,83 +223,13 @@ function updateHeaderBackground(condition) {
     header.style.color = condition === 'Clear' ? '#000' : '#fff';
 }
 
-// Function to handle chat interactions
-async function handleChat() {
-    const chatInput = document.getElementById('chatInput');
-    const chatArea = document.getElementById('chatArea');
-    const question = chatInput.value.trim();
-
-    if (!question) return;
-
-    // Display user's question
-    appendMessage('User', question);
-
-    // Clear input field
-    chatInput.value = '';
-
-    try {
-        // Generate and display bot response
-        const response = await generateWeatherResponse(question);
-        appendMessage('Bot', response);
-    } catch (error) {
-        console.error('Error in chatbot response:', error);
-        appendMessage('Bot', "I'm sorry, I encountered an error. Please try again.");
-    }
+function toggleTemperatureUnit() {
+    isCelsius = !isCelsius;
+    document.getElementById('tempUnit').textContent = isCelsius ? '°C' : '°F';
+    document.getElementById('tempUnitDisplay').textContent = isCelsius ? '°C' : '°F';
+    updateForecastTable();
 }
 
-// Function to generate weather response based on the forecast data
-async function generateWeatherResponse(question) {
-    if (!originalForecastData.length) {
-        return "I'm sorry, but I don't have any weather data available at the moment.";
-    }
-
-    const lastSearchedCity = localStorage.getItem('lastSearchedCity');
-    const lowerQuestion = question.toLowerCase();
-
-    // Simulate a small delay to prevent rate limiting issues
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    if (lowerQuestion.includes('highest temperature') || lowerQuestion.includes('hottest day')) {
-        const highestTemp = Math.max(...originalForecastData.map(item => item.main.temp));
-        const hottest = originalForecastData.find(item => item.main.temp === highestTemp);
-        return `The highest temperature in ${lastSearchedCity} is ${highestTemp.toFixed(1)}°C on ${new Date(hottest.dt * 1000).toLocaleDateString()}.`;
-    }
-
-    if (lowerQuestion.includes('lowest temperature') || lowerQuestion.includes('coldest day')) {
-        const lowestTemp = Math.min(...originalForecastData.map(item => item.main.temp));
-        const coldest = originalForecastData.find(item => item.main.temp === lowestTemp);
-        return `The lowest temperature in ${lastSearchedCity} is ${lowestTemp.toFixed(1)}°C on ${new Date(coldest.dt * 1000).toLocaleDateString()}.`;
-    }
-
-    if (lowerQuestion.includes('average temperature')) {
-        const avgTemp = originalForecastData.reduce((sum, item) => sum + item.main.temp, 0) / originalForecastData.length;
-        return `The average temperature in ${lastSearchedCity} is ${avgTemp.toFixed(1)}°C.`;
-    }
-
-    if (lowerQuestion.includes('rainy days')) {
-        const rainyDays = originalForecastData.filter(item =>
-            item.weather[0].main.toLowerCase().includes('rain')
-        ).length;
-        return `There are ${rainyDays} rainy days in the forecast for ${lastSearchedCity}.`;
-    }
-
-    if (lowerQuestion.includes('weather')) {
-        return `I can provide information about the weather in ${lastSearchedCity}. You can ask about the highest temperature, lowest temperature, average temperature, or the number of rainy days.`;
-    }
-
-    return "I'm sorry, I can only answer weather-related questions. You can ask about the highest temperature, lowest temperature, average temperature, or the number of rainy days in the forecast.";
-}
-
-// Function to append messages to the chat area
-function appendMessage(sender, message) {
-    const chatArea = document.getElementById('chatArea');
-    const messageElement = document.createElement('div');
-    messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
-    chatArea.appendChild(messageElement);
-    chatArea.scrollTop = chatArea.scrollHeight;
-}
-
-// Event listeners
 document.addEventListener('DOMContentLoaded', () => {
     loadForecastData();
     document.getElementById('sortAscending').addEventListener('click', () => sortTemperatures(true));
@@ -208,12 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('filterRain').addEventListener('click', filterRainyDays);
     document.getElementById('showHighestTemp').addEventListener('click', showHighestTemperatureDay);
     document.getElementById('resetTable').addEventListener('click', resetTable);
-    document.getElementById('sendChatBtn').addEventListener('click', handleChat);
-    document.getElementById('chatInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            handleChat();
-        }
-    });
+    document.getElementById('toggleTemp').addEventListener('click', toggleTemperatureUnit);
     document.getElementById('prevPage').addEventListener('click', () => {
         if (currentPage > 1) {
             currentPage--;
@@ -222,11 +246,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     document.getElementById('nextPage').addEventListener('click', () => {
-        const totalPages = Math.ceil(forecastData.length / entriesPerPage);
-        if (currentPage < totalPages) {
+        if (currentPage < Math.ceil(forecastData.length / entriesPerPage)) {
             currentPage++;
             updateForecastTable();
             updatePagination();
         }
     });
+
+    document.getElementById('sendChatBtn').addEventListener('click', handleChatInput);
 });

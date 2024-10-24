@@ -1,120 +1,237 @@
-/* General styling */
-body {
-    font-family: Arial, sans-serif;
+/* Global Styles */
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    background-image: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/weather-background-Ld9Iy7Ov5Ue5Ue5Ue5Ue5Ue5Ue5Ue5Ue5Ue5Ue5.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.app-container {
     display: flex;
-    background-color: #ecf0f1;
+    min-height: 100vh;
+    backdrop-filter: blur(10px);
 }
 
+/* Sidebar Styles */
 .sidebar {
-    width: 200px;
-    background-color: #2c3e50;
+    width: 250px;
+    background-color: rgba(44, 62, 80, 0.9);
     color: #ecf0f1;
     padding: 20px;
-    position: fixed;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease;
 }
 
-.sidebar .logo {
+.logo {
     font-size: 24px;
-    margin-bottom: 20px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.sidebar .menu a {
-    display: block;
+.logo-img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu a {
     color: #ecf0f1;
-    margin-bottom: 10px;
     text-decoration: none;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+.menu a:hover,
+.menu a.active {
+    background-color: #34495e;
+    transform: translateX(5px);
+}
+
+/* Main Content Styles */
 .main-content {
-    margin-left: 220px;
-    padding: 20px;
     flex: 1;
-    background-color: #ecf0f1;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 .header {
+    background-color: rgba(52, 152, 219, 0.9);
+    color: #fff;
+    padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #3498db;
-    color: #fff;
-    padding: 10px;
-    border-radius: 5px;
 }
 
-/* New styles for the search container */
 .search-container {
     display: flex;
-    justify-content: center;
-    /* Center the content */
-    align-items: center;
-    /* Center vertically */
-    flex: 1;
-    /* Allow it to take available space */
+    gap: 10px;
 }
 
-.header input {
+.search-container input {
     padding: 10px;
-    font-size: 16px;
-    margin-right: 10px;
     border: none;
-    /* Optional: Remove border for a cleaner look */
     border-radius: 5px;
-    /* Add border-radius for better appearance */
+    width: 200px;
 }
 
-.header button {
-    padding: 10px;
-    font-size: 16px;
-    background-color: #2980b9;
+.search-container button,
+.table-controls button {
+    padding: 10px 15px;
+    background-color: #2ecc71;
     color: #fff;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.search-container button:hover,
+.table-controls button:hover {
+    background-color: #27ae60;
+    transform: scale(1.05);
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 10px;
     border-radius: 5px;
 }
 
-.header button:hover {
-    background-color: #1c6ea4;
+.user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
 }
 
+/* Dashboard Content Styles */
+.dashboard-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
 .weather-widget {
-    margin: 20px 0;
-    padding: 20px;
-    background-color: #3498db;
-    color: #fff;
-    text-align: center;
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
 }
 
-.weather-widget img {
-    margin: 10px 0;
+.weather-widget:hover {
+    transform: translateY(-5px);
+}
+
+.weather-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.weather-icon {
+    width: 100px;
+    height: 100px;
+    transition: transform 0.3s ease;
+}
+
+.weather-icon:hover {
+    transform: scale(1.1) rotate(10deg);
+}
+
+.weather-details {
+    flex: 1;
+}
+
+.weather-description {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.weather-data {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.weather-data-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1.1em;
+}
+
+.weather-data-item i {
+    color: #3498db;
 }
 
 .charts {
-    display: flex;
-    justify-content: space-around;
-    margin: 20px 0;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
 }
 
 .chart-container {
-    width: 30%;
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
 }
 
-.weather-table {
-    margin-top: 20px;
-    background-color: #fff;
+.chart-container:hover {
+    transform: translateY(-5px);
+}
+
+/* Content Wrapper Styles */
+.content-wrapper {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* Table Styles */
+.forecast-table-container {
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 table {
@@ -122,161 +239,121 @@ table {
     border-collapse: collapse;
 }
 
-table th,
-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
+th,
+td {
+    padding: 12px;
     text-align: left;
+    border-bottom: 1px solid #ddd;
 }
 
-table th {
-    background-color: #3498db;
-    color: #fff;
-}
-
-.user-profile {
-    background-color: #2c3e50;
-    color: #ecf0f1;
-    padding: 10px;
-    border-radius: 50%;
-    text-align: center;
-    cursor: pointer;
-}
-
-.search-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px 0;
-}
-
-.search-container input {
-    padding: 10px;
-    font-size: 16px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-/* Styling for the chatbot widget */
-.chatbot-widget {
-    margin-top: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.chat-header {
+th {
+    background-color: rgba(52, 152, 219, 0.2);
     font-weight: bold;
-    margin-bottom: 10px;
 }
 
-.chat-area {
-    height: 150px;
-    overflow-y: auto;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-}
-
-.chat-response {
-    margin-bottom: 10px;
-}
-
-.chatbot-widget input {
-    width: calc(100% - 100px);
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.chatbot-widget button {
-    padding: 10px;
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.chatbot-widget button:hover {
-    background-color: #2980b9;
-}
-
-/* ... (keep existing styles) ... */
-
-/* New styles for the content wrapper */
-.content-wrapper {
-    display: flex;
-    gap: 20px;
-}
-
-.forecast-table-container {
-    flex: 1;
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-#forecastTable {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-#forecastTable th,
-#forecastTable td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-#forecastTable th {
-    background-color: #3498db;
-    color: #fff;
-}
-
+/* Pagination Styles */
 .pagination {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 20px;
+    gap: 10px;
 }
 
-.pagination button {
-    padding: 5px 10px;
-    margin: 0 10px;
+/* ... (previous styles remain unchanged) ... */
+
+/* Chatbot Styles */
+.chatbot-widget {
+    width: 300px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.chat-area {
+    height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+.chat-area div {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+.chat-area div:nth-child(odd) {
+    background-color: #f0f0f0;
+}
+
+.chat-input-container {
+    display: flex;
+    gap: 10px;
+}
+
+#chatInput {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#sendChatBtn {
+    padding: 10px 15px;
     background-color: #3498db;
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.pagination button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+#sendChatBtn:hover {
+    background-color: #2980b9;
 }
 
-#pageInfo {
-    font-weight: bold;
+/* ... (remaining styles unchanged) ... */
+/* Loading Spinner */
+.loading-spinner {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
 
-/* Update chatbot widget styles */
-.chatbot-widget {
-    width: 300px;
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+@keyframes spin {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
 
-/* ... (keep other existing styles) ... */
-
-/* Responsive design updates */
-@media (max-width: 768px) {
+/* Responsive Design */
+@media (max-width: 1024px) {
     .content-wrapper {
         flex-direction: column;
     }
@@ -284,4 +361,79 @@ table th {
     .chatbot-widget {
         width: 100%;
     }
+}
+
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .menu {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+
+    .charts {
+        grid-template-columns: 1fr;
+    }
+
+    .weather-data {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.weather-widget,
+.chart-container,
+.forecast-table-container,
+.chatbot-widget {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Theme Transitions */
+.header,
+.weather-widget {
+    transition: background-image 0.5s ease-in-out, color 0.5s ease-in-out;
+}
+
+/* Button hover effect */
+button {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Table row hover effect */
+tr:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+    transition: background-color 0.3s ease;
 }
